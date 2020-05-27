@@ -55,36 +55,36 @@ namespace Inet {
         virtual bool receive(int dataMaxSize = PACKET_SIZE) = 0;
         virtual void send(const char *data, int dataSize = PACKET_SIZE) = 0;
         virtual int id() const = 0;
-	virtual ~InternetConnection();
+        virtual ~InternetConnection();
         void setPress(const std::function<void(Utilities::Direction)> &f);
         void setRelease(const std::function<void(Utilities::Direction)> &f);
         void setClick(const std::function<void(int, Utilities::ButtonPurpose)> &f);
         static std::vector<char> buildPacket(bool isPressed, Utilities::Direction dir);
         static std::vector<char> buildPacket(Utilities::ButtonPurpose purpose);
-	static std::vector<char> buildPacket(Utilities::LevelType type);
+        static std::vector<char> buildPacket(Utilities::LevelType type);
         virtual std::vector<char> buildPacket(PacketType type) = 0;
-	virtual Utilities::LevelType getMap() = 0;
-	bool hasMap() const;
+        virtual Utilities::LevelType getMap() = 0;
+        bool hasMap() const;
 
     protected:
         std::function<void(Utilities::Direction)> press;
         std::function<void(Utilities::Direction)> release;
         std::function<void(int, Utilities::ButtonPurpose)> click;
-	Utilities::LevelType type;
-	bool has_map = false;
+        Utilities::LevelType type;
+        bool has_map = false;
     };
 
     class Server : public InternetConnection {
     public:
         explicit Server(u16 port = 5051); // 5051 - порт сервера
-	~Server() override;
+        ~Server() override;
         int id() const override;
         void connect(const Address &addr) override;
         bool receive(int dataMaxSize = PACKET_SIZE) override; // хэндлим прям там
         void send(const char *data, int dataSize = PACKET_SIZE) override;
         std::vector<char> buildPacket(PacketType type) override;
         std::vector<char> buildPacket(PacketType type, int id);
-	Utilities::LevelType getMap() override;
+        Utilities::LevelType getMap() override;
 
     private:
         Socket socket_;
@@ -94,13 +94,13 @@ namespace Inet {
     class Client : public InternetConnection {
     public:
         Client(u16 myPort = 5052);
-	~Client() override;
+        ~Client() override;
         int id() const override;
         void connect(const Address &addr) override;
         bool receive(int dataMaxSize = PACKET_SIZE) override;
         void send(const char *data, int dataSize = PACKET_SIZE) override;
         std::vector<char> buildPacket(PacketType type) override;
-	Utilities::LevelType getMap() override;
+        Utilities::LevelType getMap() override;
 
     private:
         int id_ = 0; // zero means not connected
