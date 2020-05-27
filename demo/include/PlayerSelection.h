@@ -60,6 +60,9 @@ private:
     QGraphicsPixmapItem *not_ready_text[MAX_NUM_OF_PLAYERS];
     QGraphicsPixmapItem *ready_text[MAX_NUM_OF_PLAYERS];
 
+    QGraphicsPixmapItem *not_ready_text[MAX_NUM_OF_PLAYERS] = { [0 ... MAX_NUM_OF_PLAYERS - 1] = nullptr };
+    QGraphicsPixmapItem *ready_text[MAX_NUM_OF_PLAYERS] = { [0 ... MAX_NUM_OF_PLAYERS - 1] = nullptr };
+
     std::vector<QString> available_skins{"images/demo_player.png", "images/demo_player_2.png"};
     std::vector<QGraphicsPixmapItem *> player_textures;
     std::vector<int> player_textures_index;

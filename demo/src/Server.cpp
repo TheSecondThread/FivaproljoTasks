@@ -221,7 +221,6 @@ namespace Inet {
     void Server::send(const char *data, int dataSize) {
         for (auto& addr : connections_) {
             socket_.send(addr, data, dataSize);
-            // войти в стиль соколова и поставить тонну ассертов
         }
     }
 
@@ -321,6 +320,7 @@ namespace Inet {
     }
     void Client::setUpdatePositions(const std::function<void(std::vector<float>)> &f) {
         update_positions = f;
+
     }
 
 } // end of namespace Inet

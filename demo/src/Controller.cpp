@@ -72,6 +72,7 @@ static int connect(Inet::Client *client) { // ждет ответного пак
 
 void Controller::connect_server() {
     internetConnection = new Inet::Server();
+
     connection_type_ = Utilities::ConnectionType::SERVER;
     remoteClicker_ = new PlayerSelectionRemoteClicker(*player_selection, internetConnection);
     state_machine_->connection_result(Utilities::ConnectionResult::SERVER_SUCCESS);
@@ -82,6 +83,7 @@ void Controller::connect_client(unsigned short serverPort) {
     connection_type_ = Utilities::ConnectionType::CLIENT;
     reinterpret_cast<Inet::Client *>(internetConnection)->setUpdatePositions(std::bind(&Controller::update_model_positions,
                                                                                        this, std::placeholders::_1));
+
     while (!localId) {
         internetConnection->connect({127, 0, 0, 1, serverPort});
         localId = ::connect(static_cast<Inet::Client *>(internetConnection));

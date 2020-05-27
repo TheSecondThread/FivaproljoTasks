@@ -64,8 +64,8 @@ private slots:
 
     void run_level(Utilities::GameMode mode);
 
-    void update_clients_positions();
 
+    void update_clients_positions();
 
 signals:
 

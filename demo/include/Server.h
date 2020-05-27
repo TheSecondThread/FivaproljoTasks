@@ -96,6 +96,7 @@ namespace Inet {
         std::vector<char> buildPacket(PacketType type) override;
     private:
         std::function<void(std::vector<float>)> update_positions;
+
         int id_ = 0; // zero means not connected
         Socket socket_;
         Address server_;
