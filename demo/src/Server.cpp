@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstring>
 #include "Server.h"
 
 namespace Inet {
@@ -249,8 +250,16 @@ namespace Inet {
         std::cout << "packet[0] == " << static_cast<int>(data[0]) << std::endl;
         for (auto& addr : connections_) {
             socket_.send(addr, data, dataSize);
-            // войти в стиль соколова и поставить тонну ассертов
         }
+    }
+
+    void Server::update_positions(const std::vector<float>& data, int dataSize) {
+        char packet[dataSize];
+        packet[0] = 4;
+        for (int i = 0; i < data.size(); i++){
+            memcpy(&packet[1 + i * sizeof(float)], (char *) &data[i], sizeof(float));
+        }
+        send(packet);
     }
 
     std::vector<char> Server::buildPacket(PacketType type) {
@@ -328,6 +337,14 @@ namespace Inet {
                 } else if (packet[1] == 4) {
                     InternetConnection::type = Utilities::LevelType::HSE;
                 }
+            } else if (packet[0] == 4){
+                std::vector<float> positions;
+                for (int i = 0; i < 4 /*players amount multiplied by cord amount*/; i++){
+                    float coordinate;
+                    memcpy((char *)&coordinate, &packet[1 + i * sizeof(float)], sizeof(float));
+                    positions.push_back(coordinate);
+                }
+                update_positions(positions);
             }
             return true;
         } else {
@@ -347,6 +364,10 @@ namespace Inet {
             packet[2] = (socket_.port() >> 8);
         }
         return packet;
+    }
+    void Client::setUpdatePositions(const std::function<void(std::vector<float>)> &f) {
+        update_positions = f;
+
     }
 
     Utilities::LevelType Client::getMap() {

@@ -70,6 +70,10 @@ namespace Utilities {
         CLIENT,
         OFFLINE
     };
+  
+    enum class ConnectionType{
+        SERVER, CLIENT, OFFLINE
+    };
 
 } // end namespace Utilities
 

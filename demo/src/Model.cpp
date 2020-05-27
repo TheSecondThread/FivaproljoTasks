@@ -13,7 +13,7 @@ Model::Model(Scene *scene, StateMachine *state_machine) : game_scene(scene), sta
 }
 
 
-void Model::make_new_level() { //TODO - find other way to load game
+void Model::make_new_level() {
     level_made = true, game_on = true;
     game_scene->add_background("images/background.jpg");
 
