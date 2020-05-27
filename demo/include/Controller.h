@@ -49,7 +49,10 @@ public:
     void run_player_selection();
 
     void connect_server();
+
     void connect_client(unsigned short serverPort);
+
+    void update_model_positions(const std::vector<float> &positions);
 
 private slots:
 //the name suggests that amount of players can be changed - for now this feature is not supported
@@ -61,6 +64,8 @@ private slots:
 
     void run_level(Utilities::GameMode mode);
 
+
+    void update_clients_positions();
 
 signals:
 
@@ -75,10 +80,12 @@ private:
     Inet::InternetConnection *internetConnection = nullptr;
     KeyPresser *key_presser_ = nullptr;
     Menu *menu_ = nullptr;
-    // KeyPresserHelper *key_presser_helper_ = nullptr;
     std::vector<Player *> players_;
     PlayerSelection *player_selection = nullptr;
     ConnectionUpdater *connUpd_ = nullptr;
     PlayerSelectionRemoteClicker *remoteClicker_ = nullptr;
     int localId = 0;
+
+    Utilities::ConnectionType connection_type_ = Utilities::ConnectionType::OFFLINE;
+    QTimer *server_pos_updater;
 };

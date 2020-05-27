@@ -37,8 +37,6 @@ namespace {
                 assert(false);
         }
     }
-
-
     QString get_block_filepath(Utilities::BlockType block_type) {
         switch (block_type) {
             case Utilities::BlockType::DEFAULT:
@@ -125,7 +123,6 @@ void Scene::print_level(Utilities::LevelType level_type) {
 
 void Scene::add_background(const QString &image) {
     scene->setBackgroundBrush(QBrush(QImage(image).scaled(1250, 700)));
-
 }
 
 void Scene::add_players(const std::vector<Player *> &players) {

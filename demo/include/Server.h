@@ -10,6 +10,8 @@
 #include <vector>
 #include <optional>
 #include <iostream>
+#include <functional>
+
 
 #include <unistd.h>
 
@@ -77,7 +79,7 @@ namespace Inet {
         void send(const char *data, int dataSize = PACKET_SIZE) override;
         std::vector<char> buildPacket(PacketType type) override;
         std::vector<char> buildPacket(PacketType type, int id);
-
+        void update_positions(const std::vector<float>& data, int dataSize = PACKET_SIZE);
     private:
         Socket socket_;
         std::vector<Address> connections_;
@@ -87,12 +89,14 @@ namespace Inet {
     public:
         Client(u16 myPort = 5052);
         int id() const override;
+        void setUpdatePositions(const std::function<void(std::vector<float>)> &f);
         void connect(const Address &addr) override;
         bool receive(int dataMaxSize = PACKET_SIZE) override;
         void send(const char *data, int dataSize = PACKET_SIZE) override;
         std::vector<char> buildPacket(PacketType type) override;
-
     private:
+        std::function<void(std::vector<float>)> update_positions;
+
         int id_ = 0; // zero means not connected
         Socket socket_;
         Address server_;

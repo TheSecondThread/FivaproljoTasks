@@ -65,6 +65,10 @@ namespace Utilities {
         EMPTY, DEFAULT
     };
 
+    enum class ConnectionType{
+        SERVER, CLIENT, OFFLINE
+    };
+
 } // end namespace Utilities
 
 namespace KeyPresserUtility {

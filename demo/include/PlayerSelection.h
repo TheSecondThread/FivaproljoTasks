@@ -53,9 +53,12 @@ private:
     std::vector<QLabel *> player_num;
 
     std::vector<QPushButton *> buttons_player[MAX_NUM_OF_PLAYERS];
-    QPushButton *customize_player[MAX_NUM_OF_PLAYERS] = { [0 ... MAX_NUM_OF_PLAYERS - 1] = nullptr };
-    QPushButton *ready_player[MAX_NUM_OF_PLAYERS] = { [0 ... MAX_NUM_OF_PLAYERS - 1] = nullptr };
-    QPushButton *back_player[MAX_NUM_OF_PLAYERS] = { [0 ... MAX_NUM_OF_PLAYERS - 1] = nullptr };
+    QPushButton *customize_player[MAX_NUM_OF_PLAYERS];
+    QPushButton *ready_player[MAX_NUM_OF_PLAYERS];
+    QPushButton *back_player[MAX_NUM_OF_PLAYERS];
+
+    QGraphicsPixmapItem *not_ready_text[MAX_NUM_OF_PLAYERS];
+    QGraphicsPixmapItem *ready_text[MAX_NUM_OF_PLAYERS];
 
     QGraphicsPixmapItem *not_ready_text[MAX_NUM_OF_PLAYERS] = { [0 ... MAX_NUM_OF_PLAYERS - 1] = nullptr };
     QGraphicsPixmapItem *ready_text[MAX_NUM_OF_PLAYERS] = { [0 ... MAX_NUM_OF_PLAYERS - 1] = nullptr };
