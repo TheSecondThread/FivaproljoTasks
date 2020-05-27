@@ -73,6 +73,8 @@ namespace Inet {
         return receivedBytes == maxDataSize;
     }
 
+    InternetConnection::~InternetConnection() {}
+
     void InternetConnection::setPress(const std::function<void(Utilities::Direction)> &f) {
         press = f; // to pay respect
     }
@@ -121,6 +123,8 @@ namespace Inet {
     }
 
     Server::Server(u16 port) : socket_(port) {}
+
+    Server::~Server() {}
 
     int Server::id() const {
         return 0;
@@ -231,6 +235,8 @@ namespace Inet {
     Client::Client(u16 myPort)
             : socket_(myPort)
     {}
+
+    Client::~Client() {}
 
     int Client::id() const {
         return id_;

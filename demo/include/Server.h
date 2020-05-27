@@ -55,6 +55,7 @@ namespace Inet {
         virtual bool receive(int dataMaxSize = PACKET_SIZE) = 0;
         virtual void send(const char *data, int dataSize = PACKET_SIZE) = 0;
         virtual int id() const = 0;
+	virtual ~InternetConnection();
         void setPress(const std::function<void(Utilities::Direction)> &f);
         void setRelease(const std::function<void(Utilities::Direction)> &f);
         void setClick(const std::function<void(int, Utilities::ButtonPurpose)> &f);
@@ -71,6 +72,7 @@ namespace Inet {
     class Server : public InternetConnection {
     public:
         explicit Server(u16 port = 5051); // 5051 - порт сервера
+	~Server() override;
         int id() const override;
         void connect(const Address &addr) override;
         bool receive(int dataMaxSize = PACKET_SIZE) override; // хэндлим прям там
@@ -86,6 +88,7 @@ namespace Inet {
     class Client : public InternetConnection {
     public:
         Client(u16 myPort = 5052);
+	~Client() override;
         int id() const override;
         void connect(const Address &addr) override;
         bool receive(int dataMaxSize = PACKET_SIZE) override;
