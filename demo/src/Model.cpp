@@ -19,17 +19,17 @@ void Model::make_new_level() { //TODO - find other way to load game
 
     Utilities::LevelType level_type;
     if (inet_type == Utilities::InetConnectionType::SERVER ||
-	inet_type == Utilities::InetConnectionType::OFFLINE) {
-	level_type = game_scene->get_random_level_type();
-	if (inet_connection) {
-	    inet_connection->send(inet_connection->buildPacket(level_type).data());
-	}
+        inet_type == Utilities::InetConnectionType::OFFLINE) {
+        level_type = game_scene->get_random_level_type();
+        if (inet_connection) {
+            inet_connection->send(inet_connection->buildPacket(level_type).data());
+        }
     } else { // client
-	while (!inet_connection->hasMap()) {
-	    usleep(100);
-	    inet_connection->receive();
-	}
-	level_type = inet_connection->getMap();
+        while (!inet_connection->hasMap()) {
+            usleep(100);
+            inet_connection->receive();
+        }
+        level_type = inet_connection->getMap();
     }
 
     game_scene->print_level(level_type);

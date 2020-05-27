@@ -88,7 +88,7 @@ namespace Inet {
     }
 
     bool InternetConnection::hasMap() const {
-	return has_map;
+        return has_map;
     }
 
     std::vector<char> InternetConnection::buildPacket(bool isPressed, Utilities::Direction dir) { //!pressed=rlsed TODO enum
@@ -114,18 +114,18 @@ namespace Inet {
     }
 
     std::vector<char> InternetConnection::buildPacket(Utilities::LevelType type) {
-	std::vector<char> packet(PACKET_SIZE, 0);
-	packet[0] = 8;
-	if (type == Utilities::LevelType::DEMO) {
-	    packet[1] = 1;
-	} else if (type == Utilities::LevelType::LEVEL1) {
-	    packet[1] = 2;
-	} else if (type == Utilities::LevelType::LEVEL2) {
-	    packet[1] = 3;
-	} else if (type == Utilities::LevelType::HSE) {
-	    packet[1] = 4;
-	}
-	return packet;
+        std::vector<char> packet(PACKET_SIZE, 0);
+        packet[0] = 8;
+        if (type == Utilities::LevelType::DEMO) {
+            packet[1] = 1;
+        } else if (type == Utilities::LevelType::LEVEL1) {
+            packet[1] = 2;
+        } else if (type == Utilities::LevelType::LEVEL2) {
+            packet[1] = 3;
+        } else if (type == Utilities::LevelType::HSE) {
+            packet[1] = 4;
+        }
+        return packet;
     }
 
     std::vector<char> InternetConnection::buildPacket(Utilities::ButtonPurpose purpose) {
@@ -246,7 +246,7 @@ namespace Inet {
     }
 
     void Server::send(const char *data, int dataSize) {
-	std::cout << "packet[0] == " << static_cast<int>(data[0]) << std::endl;
+        std::cout << "packet[0] == " << static_cast<int>(data[0]) << std::endl;
         for (auto& addr : connections_) {
             socket_.send(addr, data, dataSize);
             // войти в стиль соколова и поставить тонну ассертов
@@ -258,7 +258,7 @@ namespace Inet {
     }
 
     Utilities::LevelType Server::getMap() {
-	assert(false); // only client says remote chosen map
+        assert(false); // only client says remote chosen map
     }
 
     Client::Client(u16 myPort)
@@ -280,7 +280,7 @@ namespace Inet {
         char packet[dataMaxSize];
         Address sender;
         if (socket_.receive(sender, packet)) {
-	    std::cout << "Received packet[0] = " << static_cast<int>(packet[0]) << std::endl;
+            std::cout << "Received packet[0] = " << static_cast<int>(packet[0]) << std::endl;
             if (packet[0] == 0) { // init
                 id_ = packet[1];
             } else if (packet[0] == 1) { // pressed
@@ -318,17 +318,17 @@ namespace Inet {
                     }
                 }
             } else if (packet[0] == 8) {
-		InternetConnection::has_map = true;
-		if (packet[1] == 1) {
-		    InternetConnection::type = Utilities::LevelType::DEMO;
-		} else if (packet[1] == 2) {
-		    InternetConnection::type = Utilities::LevelType::LEVEL1;
-		} else if (packet[1] == 3) {
-		    InternetConnection::type = Utilities::LevelType::LEVEL2;
-		} else if (packet[1] == 4) {
-		    InternetConnection::type = Utilities::LevelType::HSE;
-		}
-	    }
+                InternetConnection::has_map = true;
+                if (packet[1] == 1) {
+                    InternetConnection::type = Utilities::LevelType::DEMO;
+                } else if (packet[1] == 2) {
+                    InternetConnection::type = Utilities::LevelType::LEVEL1;
+                } else if (packet[1] == 3) {
+                    InternetConnection::type = Utilities::LevelType::LEVEL2;
+                } else if (packet[1] == 4) {
+                    InternetConnection::type = Utilities::LevelType::HSE;
+                }
+            }
             return true;
         } else {
             return false;
@@ -350,8 +350,8 @@ namespace Inet {
     }
 
     Utilities::LevelType Client::getMap() {
-	InternetConnection::has_map = false;
-	return InternetConnection::type;
+        InternetConnection::has_map = false;
+        return InternetConnection::type;
     }
 
 

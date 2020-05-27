@@ -66,9 +66,9 @@ namespace Utilities {
     };
 
     enum class InetConnectionType {
-	SERVER,
-	CLIENT,
-	OFFLINE
+        SERVER,
+        CLIENT,
+        OFFLINE
     };
 
 } // end namespace Utilities
