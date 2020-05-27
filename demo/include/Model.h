@@ -10,9 +10,10 @@
 #include <vector>
 #include "LevelStatistics.h"
 #include "StateMachine.h"
+#include "Server.h"
 
 class Model : public QObject {
-Q_OBJECT
+    Q_OBJECT;
 public:
     Model(Scene *scene, StateMachine *state_machine);
 
@@ -34,6 +35,10 @@ public:
 
     void start_timer();
 
+    void set_inet_type(Utilities::InetConnectionType type);
+    
+    void set_inet_connection(Inet::InternetConnection *inet);
+
 private slots:
 
     void advance_scene();
@@ -50,4 +55,6 @@ private:
     std::vector<Player *> players_;
     QTimer *engine;
     LevelStatistics *lvl_statistic = nullptr;
+    Utilities::InetConnectionType inet_type = Utilities::InetConnectionType::OFFLINE;
+    Inet::InternetConnection *inet_connection = nullptr;
 };

@@ -75,6 +75,7 @@ public:
     void clear_blocks();
 
     void clear_players(std::vector<Player *> players);
+
 private:
     const size_t AVAILABLE_LEVELS_AMOUNT = 4;
     Background *background = nullptr;

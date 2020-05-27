@@ -74,6 +74,8 @@ namespace Inet {
         return receivedBytes == maxDataSize;
     }
 
+    InternetConnection::~InternetConnection() {}
+
     void InternetConnection::setPress(const std::function<void(Utilities::Direction)> &f) {
         press = f; // to pay respect
     }
@@ -84,6 +86,10 @@ namespace Inet {
 
     void InternetConnection::setClick(const std::function<void(int, Utilities::ButtonPurpose)> &f) {
         click = f;
+    }
+
+    bool InternetConnection::hasMap() const {
+        return has_map;
     }
 
     std::vector<char> InternetConnection::buildPacket(bool isPressed, Utilities::Direction dir) { //!pressed=rlsed TODO enum
@@ -108,6 +114,21 @@ namespace Inet {
         return packet;
     }
 
+    std::vector<char> InternetConnection::buildPacket(Utilities::LevelType type) {
+        std::vector<char> packet(PACKET_SIZE, 0);
+        packet[0] = 8;
+        if (type == Utilities::LevelType::DEMO) {
+            packet[1] = 1;
+        } else if (type == Utilities::LevelType::LEVEL1) {
+            packet[1] = 2;
+        } else if (type == Utilities::LevelType::LEVEL2) {
+            packet[1] = 3;
+        } else if (type == Utilities::LevelType::HSE) {
+            packet[1] = 4;
+        }
+        return packet;
+    }
+
     std::vector<char> InternetConnection::buildPacket(Utilities::ButtonPurpose purpose) {
         std::vector<char> packet(PACKET_SIZE, 0);
         packet[0] = 3;
@@ -122,6 +143,8 @@ namespace Inet {
     }
 
     Server::Server(u16 port) : socket_(port) {}
+
+    Server::~Server() {}
 
     int Server::id() const {
         return 0;
@@ -153,6 +176,11 @@ namespace Inet {
  * * * | 1 | - кликнута кнопка "customize"
  * * * | 2 | - кликнута кнопка "ready"
  * * * | 3 | - кликнута кнопка "back"
+ * | 8 | - выбрана карта
+ * * * | 1 | - DEMO
+ * * * | 2 | - LEVEL1
+ * * * | 3 | - LEVEL2
+ * * * | 4 | - HSE
  * | X | - id игрока, пока все id считаются равными 1, ибо пока пилю под 2 игрока // хотя лучше определять это у себя по порту
  * Впилить сюда меню
  */
@@ -219,6 +247,7 @@ namespace Inet {
     }
 
     void Server::send(const char *data, int dataSize) {
+        std::cout << "packet[0] == " << static_cast<int>(data[0]) << std::endl;
         for (auto& addr : connections_) {
             socket_.send(addr, data, dataSize);
         }
@@ -237,9 +266,15 @@ namespace Inet {
         return {};
     }
 
+    Utilities::LevelType Server::getMap() {
+        assert(false); // only client says remote chosen map
+    }
+
     Client::Client(u16 myPort)
             : socket_(myPort)
     {}
+
+    Client::~Client() {}
 
     int Client::id() const {
         return id_;
@@ -254,6 +289,7 @@ namespace Inet {
         char packet[dataMaxSize];
         Address sender;
         if (socket_.receive(sender, packet)) {
+            std::cout << "Received packet[0] = " << static_cast<int>(packet[0]) << std::endl;
             if (packet[0] == 0) { // init
                 id_ = packet[1];
             } else if (packet[0] == 1) { // pressed
@@ -290,6 +326,17 @@ namespace Inet {
                         InternetConnection::click(0, Utilities::ButtonPurpose::BACK);
                     }
                 }
+            } else if (packet[0] == 8) {
+                InternetConnection::has_map = true;
+                if (packet[1] == 1) {
+                    InternetConnection::type = Utilities::LevelType::DEMO;
+                } else if (packet[1] == 2) {
+                    InternetConnection::type = Utilities::LevelType::LEVEL1;
+                } else if (packet[1] == 3) {
+                    InternetConnection::type = Utilities::LevelType::LEVEL2;
+                } else if (packet[1] == 4) {
+                    InternetConnection::type = Utilities::LevelType::HSE;
+                }
             } else if (packet[0] == 4){
                 std::vector<float> positions;
                 for (int i = 0; i < 4 /*players amount multiplied by cord amount*/; i++){
@@ -322,5 +369,11 @@ namespace Inet {
         update_positions = f;
 
     }
+
+    Utilities::LevelType Client::getMap() {
+        InternetConnection::has_map = false;
+        return InternetConnection::type;
+    }
+
 
 } // end of namespace Inet

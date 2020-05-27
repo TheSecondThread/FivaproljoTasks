@@ -65,6 +65,12 @@ namespace Utilities {
         EMPTY, DEFAULT
     };
 
+    enum class InetConnectionType {
+        SERVER,
+        CLIENT,
+        OFFLINE
+    };
+  
     enum class ConnectionType{
         SERVER, CLIENT, OFFLINE
     };

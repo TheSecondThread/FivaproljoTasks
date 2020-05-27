@@ -39,10 +39,14 @@ void ConnectionUpdater::advance() {
 }
 
 Controller::Controller(int argc, char *argv[])
-        : app(argc, argv), scene_(new Scene()), key_presser_(new KeyPresser(internetConnection)),
-          state_machine_(new StateMachine()), model_(new Model(scene_, state_machine_)),
-          menu_(new Menu(scene_, state_machine_)), player_selection(new PlayerSelection(scene_)),
-          connUpd_(new ConnectionUpdater(internetConnection)) {
+    : app(argc, argv)
+    , scene_(new Scene())
+    , key_presser_(new KeyPresser(internetConnection))
+    , state_machine_(new StateMachine())
+    , model_(new Model(scene_, state_machine_))
+    , menu_(new Menu(scene_, state_machine_))
+    , player_selection(new PlayerSelection(scene_))
+    , connUpd_(new ConnectionUpdater(internetConnection)) {
     key_presser_->setFixedSize(QSize(scene_->get_width(), scene_->get_height()));
     scene_->addWidget(key_presser_);
     connect(state_machine_, &StateMachine::set_num_of_players, this, &Controller::set_num_of_players_for_lvl);
@@ -76,6 +80,8 @@ void Controller::connect_server() {
     connection_type_ = Utilities::ConnectionType::SERVER;
     remoteClicker_ = new PlayerSelectionRemoteClicker(*player_selection, internetConnection);
     state_machine_->connection_result(Utilities::ConnectionResult::SERVER_SUCCESS);
+    model_->set_inet_type(Utilities::InetConnectionType::SERVER);
+    model_->set_inet_connection(internetConnection);
 }
 
 void Controller::connect_client(unsigned short serverPort) {
@@ -94,6 +100,8 @@ void Controller::connect_client(unsigned short serverPort) {
     }
     remoteClicker_ = new PlayerSelectionRemoteClicker(*player_selection, internetConnection);
     state_machine_->connection_result(Utilities::ConnectionResult::CLIENT_SUCCESS);
+    model_->set_inet_type(Utilities::InetConnectionType::CLIENT);
+    model_->set_inet_connection(internetConnection);
 }
 
 /*

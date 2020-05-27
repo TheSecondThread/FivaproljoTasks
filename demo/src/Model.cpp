@@ -1,6 +1,7 @@
 #include "Model.h"
 #include "Player.h"
 #include <QTimer>
+#include <unistd.h>
 
 Model::Model(Scene *scene, StateMachine *state_machine) : game_scene(scene), state_machine(state_machine) {
     game_just_ended = false;
@@ -16,12 +17,33 @@ void Model::make_new_level() {
     level_made = true, game_on = true;
     game_scene->add_background("images/background.jpg");
 
-    Utilities::LevelType level_type = game_scene->get_random_level_type();
+    Utilities::LevelType level_type;
+    if (inet_type == Utilities::InetConnectionType::SERVER ||
+        inet_type == Utilities::InetConnectionType::OFFLINE) {
+        level_type = game_scene->get_random_level_type();
+        if (inet_connection) {
+            inet_connection->send(inet_connection->buildPacket(level_type).data());
+        }
+    } else { // client
+        while (!inet_connection->hasMap()) {
+            usleep(100);
+            inet_connection->receive();
+        }
+        level_type = inet_connection->getMap();
+    }
 
     game_scene->print_level(level_type);
     game_scene->add_players(players_);
     start_timer();
     game_scene->show();
+}
+
+void Model::set_inet_type(Utilities::InetConnectionType type) {
+    inet_type = type;
+}
+
+void Model::set_inet_connection(Inet::InternetConnection *inet) {
+    inet_connection = inet;
 }
 
 void Model::advance_scene() {

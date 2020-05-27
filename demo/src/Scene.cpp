@@ -5,8 +5,8 @@
 #include "Scene.h"
 
 Scene::Scene(QWidget *parent)
-        : scene(new QGraphicsScene()), level_blocks() {
-
+    : scene(new QGraphicsScene())
+    , level_blocks() {
     scene->setSceneRect(0, 0, 1250, 700);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -22,6 +22,7 @@ Scene::~Scene() {
 }
 
 namespace {
+    
     QString get_level_file_name(Utilities::LevelType level_type) {
         switch (level_type) {
             case Utilities::LevelType::DEMO:
@@ -73,7 +74,7 @@ void Scene::print_block(Utilities::BlockType block_type, QPoint position, int bl
 
 
 void Scene::print_level(Utilities::LevelType level_type) {
-
+    
     QString file_name = get_level_file_name(level_type);
     QFile inFile(file_name);
     inFile.open(QIODevice::ReadOnly | QIODevice::Text);
