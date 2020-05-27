@@ -61,12 +61,17 @@ namespace Inet {
         void setClick(const std::function<void(int, Utilities::ButtonPurpose)> &f);
         static std::vector<char> buildPacket(bool isPressed, Utilities::Direction dir);
         static std::vector<char> buildPacket(Utilities::ButtonPurpose purpose);
+	static std::vector<char> buildPacket(Utilities::LevelType type);
         virtual std::vector<char> buildPacket(PacketType type) = 0;
+	virtual Utilities::LevelType getMap() = 0;
+	bool hasMap() const;
 
     protected:
         std::function<void(Utilities::Direction)> press;
         std::function<void(Utilities::Direction)> release;
         std::function<void(int, Utilities::ButtonPurpose)> click;
+	Utilities::LevelType type;
+	bool has_map = false;
     };
 
     class Server : public InternetConnection {
@@ -79,6 +84,7 @@ namespace Inet {
         void send(const char *data, int dataSize = PACKET_SIZE) override;
         std::vector<char> buildPacket(PacketType type) override;
         std::vector<char> buildPacket(PacketType type, int id);
+	Utilities::LevelType getMap() override;
 
     private:
         Socket socket_;
@@ -94,6 +100,7 @@ namespace Inet {
         bool receive(int dataMaxSize = PACKET_SIZE) override;
         void send(const char *data, int dataSize = PACKET_SIZE) override;
         std::vector<char> buildPacket(PacketType type) override;
+	Utilities::LevelType getMap() override;
 
     private:
         int id_ = 0; // zero means not connected
